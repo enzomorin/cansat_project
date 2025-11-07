@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>test</title>
+    <title>{% block title %}{% endblock %}Le diegtest</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    {% block head %}{% endblock %}
 </head>
 <body>
     <script>
         async function submit() {
             const res = await fetch("http://localhost:8000/");
-            const data = res.json();
+            const data = await res.json();
             document.getElementById("text").textContent = data.message;
         }
-
     </script>
     <a>
         <button onclick="submit()">test clique vas yyyyy</button>
