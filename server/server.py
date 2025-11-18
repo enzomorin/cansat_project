@@ -8,8 +8,10 @@ app = fastapi.FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True
+    allow_origins = ["*"],
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"],
 )
 
 #async pour les fonction
@@ -19,8 +21,8 @@ def home():
     return {"message":"hello world"}
 
 @app.get("/base/{items}")
-def get_data():
-    pass
+def get_data(items: str):
+    return {"you_requested": items}
 
 @app.put("/base/{items}")
 def save_data():
