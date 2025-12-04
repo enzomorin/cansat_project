@@ -1,0 +1,29 @@
+for the site server use flask if needed to use differente librairies for the project to make it diversified
+create data base with sql (or start with json to see how it works with fastapi)
+finish html css js site
+electron app in html css js
+
+libraises to use -> :
+Database ORM    / SQLAlchemy    works with FastAPI
+Data visualization    / Chart.js / Plotly.js(for 3D)   Easy to embed into HTML via <canvas>, Chart.js for simple and responsive dashboards or Plotly.js for advanced interactivity
+App communication      / REST / or WebSocket(live visualization without polling*)    Electron app can fetch JSON
+Local database     / SQLite (local dev/testing) -> PostgreSQL (production/main server)
+
+at the end put server around web -> :
+Home Server    Expose pc via router and dynamic DNS -> orange settings: 192.168.1.1     setup needed -> see there:
+
+use a linux like ubuntu, rocky linux or debian ?
+HTTPS -> handled by NGINX or CADDY + Let’s Encrypt
+FREENOM -> take a free domain name or create one
+DOCKER (+ docker compose) -> assign ports and the reverse proxy container
+CORS -> limit allow_origins to domain and app
+Authentication -> API Key or JWT for Electron app
+deployment -> host 0.0.0.0, run via systemd/Docker, reverse proxy with NGINX or CADDDY
++ (if we wanted, if ip dynamic dns don t work) Ngrok for development / demo (fast, no router setup) or permanent home server access: Use DuckDNS + port forwarding + Nginx/Caddy for HTTPS.
+
+* = Polling is a method where a client (like a browser or Electron app) repeatedly asks the server for updates at regular intervals.
+
+
+
+
+use File Browser as own cloud for the team project: https://filebrowser.org

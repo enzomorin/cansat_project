@@ -1,8 +1,7 @@
 if not __name__ == '__main__': quit()
 
-import fastapi
+import fastapi, uvicorn, sqlite3
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
 
 app = fastapi.FastAPI()
 
@@ -17,15 +16,14 @@ app.add_middleware(
 #async pour les fonction
 
 @app.get("/")
-def home():
-    return {"message":"hello world"}
+async def home():
+    return {"message": f"hello world"}
 
 @app.get("/base/{items}")
-def get_data(items: str):
+async def get_data(items: str):
     return {"you_requested": items}
 
 @app.put("/base/{items}")
-def save_data():
+async def save_data():
     pass
-
 uvicorn.run(app, host = "127.0.0.1", port = 8000)

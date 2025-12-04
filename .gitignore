@@ -1,1 +1,11 @@
+#---- Environment files ----
 .venv/
+
+#---- vscode config -----
+.vscode/
+
+#---- Python ----
+**/__pycache__/
+
+#---- Node.js ----
+node_modules/
