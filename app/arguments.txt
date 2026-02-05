@@ -1,0 +1,176 @@
+👉 Mais NON, une simple page HTML n’est PAS équivalente à une appli dans ton cas
+
+La vérité est entre les deux. Je t’explique clairement, puis je te donne des arguments béton à utiliser.
+
+1️⃣ Quand ton prof a raison (important à reconnaître)
+
+Il a raison SI ton “appli” sert seulement à :
+
+afficher des données
+
+montrer une carte
+
+sélectionner une mission
+
+télécharger un fichier
+
+👉 Dans ce cas :
+
+une page HTML + JS suffit
+
+faire Electron serait sur-dimensionné
+
+et oui, ce serait une erreur de conception
+
+👉 Reconnaître ça te rend crédible.
+
+2️⃣ Pourquoi une page HTML n’est PAS suffisante pour TON cas
+
+Maintenant les arguments contre, solides et défendables 👇
+
+🔌 1. Accès fiable au port série (ARGUMENT PRINCIPAL)
+
+Une page HTML :
+
+dépend de la Web Serial API
+
+fonctionne seulement sur :
+
+Chrome / Edge
+
+nécessite :
+
+autorisations utilisateur à chaque fois
+
+pas faite pour un usage critique terrain
+
+Une appli PC :
+
+accès natif au port série
+
+stable
+
+pas dépendante du navigateur
+
+👉 Phrase clé :
+
+L’acquisition de données matérielles est plus fiable dans une application desktop que dans une page web.
+
+📡 2. Fonctionnement hors ligne garanti
+
+HTML :
+
+peut fonctionner hors ligne avec bricolage
+
+cache navigateur fragile
+
+Appli PC :
+
+100 % locale
+
+aucune dépendance réseau
+
+idéale pour une station sol
+
+👉 En mission CanSat, c’est très important.
+
+🗃️ 3. Gestion avancée des fichiers
+
+HTML :
+
+accès très limité au système de fichiers
+
+export compliqué
+
+pas de structure de dossiers propre
+
+Appli :
+
+création automatique :
+
+/missions/
+  /2026-01-15/
+    data.csv
+    report.pdf
+
+
+sauvegarde fiable
+
+exports propres
+
+🧠 4. Sécurité et contrôle
+
+HTML :
+
+tourne dans un navigateur
+
+restrictions fortes (sandbox)
+
+Appli :
+
+contrôle total
+
+moins de risques de blocage par le système
+
+🧪 5. Approche “outil scientifique” vs “page web”
+
+Très bon argument conceptuel :
+
+Page HTML	Appli PC
+Visualisation	Acquisition
+Consultation	Opération
+Dépend du navigateur	Dépend du système
+Public	Technique
+
+👉 Tu peux dire :
+
+Une page HTML sert à consulter, une application sert à opérer.
+
+3️⃣ MAIS… là où ton prof marque des points contre toi
+
+Soyons lucides 👇
+
+Electron :
+
+lourd
+
+long à développer
+
+risque de bugs
+
+Pour un projet scolaire :
+
+le temps est un facteur clé
+
+👉 Donc si ton appli fait trop de choses, ton prof a peur que tu n’en finisses aucune correctement.
+
+4️⃣ Le COMPROMIS INTELLIGENT (très fort pédagogiquement)
+👉 “HTML oui… mais DANS une appli”
+
+C’est un argument excellent :
+
+L’interface est en HTML/JS, mais encapsulée dans une application desktop pour permettre l’accès matériel.
+
+👉 Techniquement :
+
+UI = HTML
+
+logique hardware = Node / Python
+
+cohérent
+
+propre
+
+5️⃣ Phrase finale à dire à ton prof (clé)
+
+Tu peux conclure comme ça :
+
+Une page HTML suffit pour la visualisation, mais dès qu’il s’agit d’acquisition matérielle fiable et hors ligne, une application desktop devient plus appropriée. Mon choix vise la robustesse en conditions réelles de mission.
+
+C’est calme, technique, indiscutable.
+
+6️⃣ Ce que je te conseille honnêtement
+
+Si ton prof est :
+
+ouvert → défends une appli PC minimale

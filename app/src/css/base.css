@@ -1,0 +1,329 @@
+/* ==========================================================
+    HydroVinci – Sidebar & Dashboard CSS
+    Charte eau / environnement
+    Typo : IBM Plex Mono / Courier New
+   ========================================================== */
+
+/* ---------------------------
+    Variables de charte
+---------------------------- */
+:root {
+    /* Environnement */
+    --water-deep: #1B3B6F;
+    --water-flood: #36acfb;
+    --earth: #A9745B;
+    --nature: #7BA05B;
+    --sky: #F2E394;
+
+    /* Texte */
+    --text-main: #0e1c2c;
+    --text-muted: #5f6b7a;
+
+    /* UI */
+    --bg-main: #f7f8fa;
+    --bg-sidebar: #1B3B6F;
+    --bg-sidebar-hover: #244b87;
+    --bg-active: #36acfb;
+    --error: #FF5C5C;
+
+    --border-soft: rgba(255, 255, 255, 0.12);
+    --transition-speed: 300ms;
+
+    --icon-size: 16px;
+}
+
+/* ---------------------------
+    Typographie & reset
+---------------------------- */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+
+* {
+    box-sizing: border-box;
+    font-style: italic; /* tu peux enlever si tu veux normal */
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    font-family: "IBM Plex Mono", "Courier New", monospace;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    display: flex;
+    justify-content: flex-start; /* centre horizontalement les blocs */
+    align-items: flex-start; /* alignement en haut */
+    padding: 12px; /* espace autour des blocs */
+    gap: 12px; /* espace entre sidebar et content */
+    position: relative;
+}
+
+/* Fond global derrière les blocs */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, var(--sky) 0%, var(--bg-main) 120px);
+    z-index: -1;
+}
+
+/* ---------------------------
+    Layout global
+---------------------------- */
+#sidebar {
+    height: calc(100vh - 24px);
+    flex-shrink: 0; /* ne pas rétrécir */
+    border-radius: 16px; /* coins arrondis */
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    transition: width var(--transition-speed) ease;
+}
+
+#content {
+    min-height: calc(100vh - 24px);
+    flex: 1;
+    padding: 24px;
+    background-color: var(--bg-main);
+    border-radius: 16px;
+    border: 3px solid var(--sky); /* beige/orange clair */
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+/* ---------------------------
+    Sidebar
+---------------------------- */
+aside[data-sidebar] {
+    height: 100%;
+    background-color: var(--bg-sidebar);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: width var(--transition-speed) cubic-bezier(1.00,0.00,0.00,1.00);
+    border-right: 1px solid var(--border-soft);
+    border-radius: 16px;
+}
+
+/* États */
+aside[data-sidebar][data-sidebar-state="collapsed"] {
+    width: 64px;
+}
+
+aside[data-sidebar][data-sidebar-state="expanded"] {
+    width: 240px;
+}
+
+/* ---------------------------
+    Navigation
+---------------------------- */
+nav[data-sidebar-nav] {
+    padding: 12px 0;
+    height: 100%;
+}
+
+ul[data-sidebar-list] {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* ---------------------------
+    Boutons
+---------------------------- */
+button[data-sidebar-button],
+button[data-togglesidebar] {
+    all: unset;
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: white;
+    transition: background-color 0.2s ease;
+}
+
+button[data-sidebar-button]:hover,
+button[data-togglesidebar]:hover {
+    background-color: var(--bg-sidebar-hover);
+}
+
+/* Bouton actif */
+button[data-sidebar-button].active {
+    background-color: var(--bg-active);
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+/* ---------------------------
+    Icônes & labels
+---------------------------- */
+[data-sidebar-icon] {
+    font-size: 20px;
+    min-width: 24px;
+    text-align: center;
+    transition: transform var(--transition-speed) ease;
+}
+
+[data-sidebar-label] {
+    white-space: nowrap;
+    transition: opacity 150ms ease, transform 150ms ease;
+}
+
+/* Labels cachés en mode collapsed */
+aside[data-sidebar][data-sidebar-state="collapsed"] [data-sidebar-label] {
+    opacity: 0;
+    transform: translateX(-6px);
+    pointer-events: none;
+}
+
+/* ---------------------------
+    Toggle icon rotation
+---------------------------- */
+aside[data-sidebar][data-sidebar-state="collapsed"] button[data-togglesidebar] [data-sidebar-icon] {
+    transform: rotate(0deg);
+}
+
+aside[data-sidebar][data-sidebar-state="expanded"] button[data-togglesidebar] [data-sidebar-icon] {
+    transform: rotate(180deg);
+}
+
+/* ---------------------------
+    Bouton toggle (bas de sidebar)
+---------------------------- */
+li[show-sidebar-button] {
+    margin-top: auto;
+    border-top: 1px solid var(--border-soft);
+}
+
+/* ---------------------------
+    Accents thématiques (optionnel)
+---------------------------- */
+button[data-sidebar-button][data-pagelink="missions"] {
+    border-left: 3px solid var(--water-flood);
+}
+
+button[data-sidebar-button][data-pagelink="antenna"] {
+    border-left: 3px solid var(--nature);
+}
+
+button[data-sidebar-button][data-pagelink="compare"] {
+    border-left: 3px solid var(--earth);
+}
+
+/* Ajoute d'un border-left transparent aux boutons qui n'ont pas d'accent */
+button[data-sidebar-button]:not([data-pagelink="missions"]):not([data-pagelink="antenna"]):not([data-pagelink="compare"]) {
+    border-left: 3px solid transparent;
+}
+
+/* ---------------------------
+    Container global des notifs
+---------------------------- */
+#notif-container {
+    position: fixed;
+    bottom: 22px;
+    right: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* ---------------------------
+    Notification individuelle
+---------------------------- */
+.notif {
+    pointer-events: auto;
+    background: var(--bg-main);
+    border: 1px solid var(--border-soft);
+    border-radius: 6px;
+    padding: 6px 8px;
+    min-width: 160px;
+    max-width: 260px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    box-shadow: 0 4px 14px rgba(0,0,0,.15);
+
+    /* état initial */
+    opacity: 0;
+    transform: translateY(12px);
+
+    transition:
+        opacity .22s ease,
+        transform .22s ease,
+        box-shadow .18s ease;
+
+    /* texte net */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* état visible */
+.notif.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ---------------------------
+    Ligne principale (icône + titre)
+---------------------------- */
+.notif .main {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Icône */
+.notif i {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Titre */
+.notif .title {
+    font-weight: 600;
+    font-size: 0.82rem;
+    line-height: 1;
+    margin: 0;
+}
+
+/* Message */
+.notif .message {
+    font-size: 0.72rem;
+    line-height: 1.2;
+    color: var(--text-muted);
+    margin: 0;
+    padding-left: 22px;
+}
+
+/* Hover léger (sans transform) */
+.notif:hover {
+    box-shadow: 0 8px 22px rgba(0,0,0,.22);
+    transform: translateY(0) scale(1.015);
+}
+
+.notif.visible:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,.22);
+}
+
+/* ---------------------------
+    Couleurs
+---------------------------- */
+.notif.success { border-color: var(--water-flood); color: var(--water-flood); }
+.notif.error   { border-color: var(--error); color: var(--error); }
+.notif.info    { border-color: var(--nature); color: var(--nature); }

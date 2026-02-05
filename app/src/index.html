@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' http://localhost:8000;"/>
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"/>
+    <title>HydroVinci - dashboard and telemetry</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/lucide_icons.css">
+</head>
+
+<body>
+    <div id="sidebar">
+    <aside data-sidebar data-sidebar-state="collapsed">
+        <nav data-sidebar-nav>
+            <ul data-sidebar-list>
+                <li home-button>
+                    <button data-sidebar-button data-pagelink="home">
+                        <i data-sidebar-icon data-lucide="house"></i>
+                        <span data-sidebar-label>Home</span>
+                    </button>
+                </li>
+                <li missions-button>
+                    <button data-sidebar-button data-pagelink="missions">
+                        <i data-sidebar-icon data-lucide="database"></i>
+                        <span data-sidebar-label>Missions</span>
+                    </button>
+                </li>
+                <li compare-button>
+                    <button data-sidebar-button data-pagelink="compare">
+                        <i data-sidebar-icon data-lucide="chart-spline"></i>
+                        <span data-sidebar-label>Compare missions</span>
+                    </button>
+                </li>
+                <li antenna-button>
+                    <button data-sidebar-button data-pagelink="antenna">
+                        <i data-sidebar-icon data-lucide="plus"></i>
+                        <span data-sidebar-label>New mission</span>
+                    </button>
+                </li>
+                <li info-button>
+                    <button data-sidebar-button data-pagelink="info">
+                        <i data-sidebar-icon data-lucide="badge-info"></i>
+                        <span data-sidebar-label>About us</span>
+                    </button>
+                </li>
+                <li show-sidebar-button>
+                    <button data-togglesidebar>
+                        <i data-sidebar-icon data-lucide="panel-right-close"></i>
+                    </button>
+                </li>
+            </ul data-sidebar-list>
+        </nav>
+    </aside>
+    </div>
+
+    <main id="content" class="pages"></main>
+
+    <div id="notif-container" class="notif-container"></div>
+</body>
+<script type="module" src="./renderer.js"></script>
+</html>

@@ -1,0 +1,283 @@
+Problèmes identifiés dans ton approche actuelle
+
+Navigation via sidebar
+
+Ton sidebar permet de changer de page à tout moment, ce qui peut casser le workflow d’une mission en cours.
+
+Tu n’as pas de gestion de l’état « mission en cours ».
+
+Perte des données en cas de fermeture brutale
+
+Les données du port série sont juste affichées et logguées, mais si l’appli crash, tu n’as pas de sauvegarde « mission en cours » structurée.
+
+Import/export des missions
+
+Tu envisages un bouton « Import mission » pour reprendre une mission, mais il n’est pas clair où le mettre et comment l’intégrer.
+
+Proposition d’architecture simplifiée et robuste
+1️⃣ Gestion des pages avec état de mission
+
+Au lieu de permettre un switch libre avec la sidebar, on peut :
+
+Garder une page principale avec un main unique.
+
+Créer un objet currentMission global pour stocker l’état de la mission :
+
+window.currentMission = {
+    id: null,
+    startTime: null,
+    port: null,
+    data: [],
+    status: "idle", // "idle", "running", "finished"
+    location: null,
+    report: null
+}
+
+
+Toutes les pages (connexion, données, rapport) lisent et écrivent dans cet objet.
+
+Si l’appli crash, tu peux sauvegarder périodiquement currentMission dans un fichier JSON pour la récupérer au démarrage.
+
+2️⃣ Workflow recommandé
+
+Page connexion port série
+
+Si connection réussie → window.currentMission.status = "running"
+
+Sauvegarde du port utilisé et de la date de début.
+
+Transition automatique vers page données.
+
+Page données en direct
+
+Affichage du flux du port série.
+
+Stockage dans window.currentMission.data.
+
+Bouton Fin de mission → change status à "finished" → passe à page rapport.
+
+Page rapport / export
+
+Permet de compléter la mission avec date, lieu, commentaires.
+
+Export JSON ou CSV des données (currentMission) pour archive.
+
+Bouton Import mission
+
+Visible uniquement sur la page Home / Missions.
+
+Charge un fichier JSON et remplit currentMission, puis passe directement à la page rapport.
+
+3️⃣ Sauvegarde automatique (anti-crash)
+
+Tu peux créer un autosave toutes les 5 secondes :
+
+const path = require('path')
+const fs = require('fs').promises
+
+async function saveMission() {
+    if (window.currentMission.id) {
+        const savePath = path.join(__dirname, 'missions', `${window.currentMission.id}.json`)
+        await fs.writeFile(savePath, JSON.stringify(window.currentMission, null, 2))
+    }
+}
+
+// Autosave
+setInterval(saveMission, 5000)
+
+
+À l’ouverture de l’appli, tu peux vérifier si un fichier « mission en cours » existe et proposer de reprendre la mission.
+
+4️⃣ Gestion du bouton Import Mission
+
+Place le bouton dans la page Home ou dans la sidebar mais désactivé si une mission est en cours.
+
+Quand l’utilisateur clique dessus :
+
+Choisir un fichier JSON.
+
+Charger son contenu dans window.currentMission.
+
+Passer à la page rapport / données selon status.
+
+5️⃣ Blocage de navigation libre pendant une mission
+
+Tu peux désactiver temporairement le sidebar data-sidebar-button si currentMission.status === "running" :
+
+document.querySelectorAll('[data-sidebar-button]').forEach(btn => {
+    if (window.currentMission.status === 'running') {
+        btn.disabled = true
+    } else {
+        btn.disabled = false
+    }
+})
+
+
+Ou ajouter un warning avant le changement de page :
+
+window.page.change = (page) => {
+    if (window.currentMission.status === 'running' && page !== 'data_port') {
+        if (!confirm('Une mission est en cours, êtes-vous sûr de quitter ?')) return
+    }
+    // ton code de changement de page
+}
+
+6️⃣ Résumé visuel du flux
+Home → [Connecter port] → Data page → [Fin de mission] → Rapport → Export
+ ^                                 ^
+ |                                 |
+ |---- Import mission (JSON) ------|
+
+
+Toutes les données sont stockées dans window.currentMission.
+
+Sauvegarde automatique → reprise possible après crash.
+
+Sidebar désactivé pendant mission → sécurité.
+
+Import/export géré proprement → simplicité.
+
+Si tu veux, je peux te réécrire ton renderer.js et pages.js pour intégrer cette logique complète de gestion de mission avec autosave et import/export. Ça rendra ton app beaucoup plus stable et simple à maintenir.
+
+Veux‑tu que je fasse ça ?
+
+plustot l'onglet new missions qui à une structure currentmissison et fais switch les page html si il est sur cette onglet new mission genre quand on clique sur l'onglet new mission il vérifie sur si il est en current mission puis sur quel onglet et données il à pourrais tu me faire un recap de la structure qsue je dois faire et tout sur tout ça et dis moi si c'est bien
+
+Ah parfait, je comprends mieux : tu veux que tout ce qui concerne une mission en cours soit géré dans l’onglet “New Mission”, et que selon l’état de la mission, l’onglet affiche automatiquement la page correcte (connexion, données, rapport). Voici un récap structuré et un plan pour ton app.
+
+1️⃣ Objet central : currentMission
+
+Tout tourne autour de cet objet. Il doit contenir toutes les informations nécessaires à une mission :
+
+window.currentMission = {
+    id: null,            // identifiant unique (ex: timestamp)
+    startTime: null,     // date/heure début mission
+    port: null,          // port série connecté
+    data: [],            // tableau des données reçues
+    status: "idle",      // "idle" | "connecting" | "running" | "finished"
+    location: null,      // lieu de la mission (pour rapport)
+    report: null         // texte ou autres infos de rapport
+}
+
+
+idle : aucune mission en cours
+
+connecting : en train de se connecter au port
+
+running : mission active, réception des données
+
+finished : mission terminée, en attente de rapport
+
+2️⃣ Structure des pages dans l’onglet New Mission
+
+Page Connexion (connect.html)
+
+Choix du port série
+
+Bouton “Connecter”
+
+Après succès → status = "running" et switch automatique vers Data Page
+
+Page Data (data.html)
+
+Affiche les données reçues via le port série
+
+Sauvegarde automatique dans currentMission.data
+
+Bouton Fin de mission → status = "finished" → switch vers Page Rapport
+
+Page Rapport (report.html)
+
+Formulaire pour compléter la mission : date, lieu, commentaires
+
+Bouton Exporter / Sauvegarder mission → écrit un fichier JSON
+
+3️⃣ Workflow pour l’onglet “New Mission”
+Onglet New Mission cliqué
+        │
+        ▼
+Vérifie si currentMission existe
+        │
+        ├─ Si idle → affiche page Connexion
+        │
+        ├─ Si connecting/running → affiche page Data
+        │
+        └─ Si finished → affiche page Rapport
+
+
+Chaque fois que l’utilisateur clique sur l’onglet, la page affichée correspond automatiquement au statut actuel de la mission.
+
+4️⃣ Sauvegarde automatique pour crash
+
+Toutes les 5 secondes ou à chaque réception de donnée, sauvegarde currentMission dans un fichier JSON :
+
+const path = require('path')
+const fs = require('fs').promises
+
+async function autosaveMission() {
+    if (!window.currentMission.id) return
+    const savePath = path.join(__dirname, 'missions', `${window.currentMission.id}.json`)
+    await fs.writeFile(savePath, JSON.stringify(window.currentMission, null, 2))
+}
+
+setInterval(autosaveMission, 5000)
+
+
+Au démarrage, tu peux vérifier si un fichier existe et proposer de reprendre la mission.
+
+5️⃣ Import / Export des missions
+
+Bouton Import : sur la page Home ou onglet Missions (hors mission en cours)
+
+Export : sur la page Rapport → enregistre currentMission en JSON/CSV
+
+function importMission(filePath) {
+    const data = JSON.parse(fs.readFileSync(filePath))
+    window.currentMission = data
+    // switch automatique vers la page correspondant au statut
+    switch(window.currentMission.status) {
+        case 'running': changePage('data'); break
+        case 'finished': changePage('report'); break
+        default: changePage('connect'); break
+    }
+}
+
+6️⃣ Gestion de la navigation
+
+Tant qu’une mission est running, tu peux :
+
+désactiver le reste de la sidebar
+
+ou afficher un warning avant de quitter
+
+if(window.currentMission.status === 'running') {
+    alert("Mission en cours ! Impossible de changer d'onglet.")
+}
+
+
+Sur l’onglet New Mission : toujours switcher automatiquement selon le statut.
+
+✅ Résumé de la structure finale
+Onglet "New Mission"
+│
+├─ Connexion port (status: idle / connecting)
+│     └─ Choix port série → status = running
+│
+├─ Data page (status: running)
+│     └─ Affiche données + sauvegarde auto
+│     └─ Bouton Fin de mission → status = finished
+│
+└─ Rapport page (status: finished)
+      └─ Formulaire (date, lieu, commentaire)
+      └─ Export mission (JSON / CSV)
+
+
+Avantages de cette structure :
+
+Tout est centralisé dans currentMission
+
+Pas de perte de données si l’app crash → autosave
+
+Navigation cohérente : onglet New Mission reflète toujours le statut
+
+Simple à maintenir et à étendre pour plusieurs missions

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}?{{ name }}">
+{% endblock %}
+
+{% block body %}
+    <p>this line is on home.html</p>
+
+    <h2>Ajouter une mission</h2>
+    <form action="/db/add" method="POST">
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="text" name="csv_path" placeholder="path" required>
+        <input type="text" name="location" placeholder="location" required>
+        <button type="submit" {% if not api_online %}disabled{% endif %}> Submit </button>
+    </form>
+
+    <h1>Missions lists</h1>
+
+    {% if not api_online %}
+        <p style="color:red;">
+            🚫 Serveur hors ligne — impossible de récupérer les données
+        </p>
+    {% endif %}
+    {% if api_online %}
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>CSV_path</th>
+                <th>Location</th>
+                <th>Missions-date</th>
+                <th>Actions</th>
+            </tr>
+
+            {% for mission in missions %}
+            <tr>
+                <td data-label="ID">{{ mission.id }}</td>
+                <td data-label="Name">{{ mission.name }}</td>
+                <td data-label="CSV_path">{{ mission.csv_path }}</td>
+                <td data-label="Location">{{ mission.location }}</td>
+                <td data-label="Missions-date">{{ mission.mission_date }}</td>
+
+                <td data-label="Actions">
+                    <a href="/edit/{{ mission.id }}">Modifier</a>
+                    <a href="/db/delete/{{ mission.id }}">Supprimer</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Edit user{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}?{{ name }}">
+{% endblock %}
+
+{% block body %}
+    <h2>Modifier un utilisateur</h2>
+    <form action="/db/edit/{{ mission.id }}" method="POST">
+        <input type="text" name="name" placeholder="Name" value="{{ mission.name }}" required>
+        <input type="text" name="csv_path" placeholder="path" value="{{ mission.csv_path }}" required>
+        <input type="text" name="location" placeholder="location" value="{{ mission.location }}" required>
+        <button type="submit" {% if not api_online %}disabled{% endif %}> Saving </button>
+    </form>
+{% endblock %}
