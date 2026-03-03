@@ -29,6 +29,7 @@
     --border-soft: rgba(255, 255, 255, 0.12);
     --transition-speed: 300ms;
 
+    --spacing: 1rem;
     --icon-size: 16px;
 }
 
@@ -52,10 +53,10 @@ body {
     background-color: var(--bg-main);
     color: var(--text-main);
     display: flex;
-    justify-content: flex-start; /* centre horizontalement les blocs */
-    align-items: flex-start; /* alignement en haut */
-    padding: 12px; /* espace autour des blocs */
-    gap: 12px; /* espace entre sidebar et content */
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 12px;
+    gap: 12px;
     position: relative;
 }
 
@@ -69,12 +70,17 @@ body::before {
 }
 
 /* ---------------------------
+    Common instruction
+---------------------------- */
+.center { display: flex; justify-content: center; align-items: center; gap: 1rem; }
+
+/* ---------------------------
     Layout global
 ---------------------------- */
 #sidebar {
     height: calc(100vh - 24px);
-    flex-shrink: 0; /* ne pas rétrécir */
-    border-radius: 16px; /* coins arrondis */
+    flex-shrink: 0;
+    border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     transition: width var(--transition-speed) ease;
@@ -86,7 +92,7 @@ body::before {
     padding: 24px;
     background-color: var(--bg-main);
     border-radius: 16px;
-    border: 3px solid var(--sky); /* beige/orange clair */
+    border: 3px solid var(--sky);
     box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
 }
@@ -107,13 +113,8 @@ aside[data-sidebar] {
 }
 
 /* États */
-aside[data-sidebar][data-sidebar-state="collapsed"] {
-    width: 64px;
-}
-
-aside[data-sidebar][data-sidebar-state="expanded"] {
-    width: 240px;
-}
+aside[data-sidebar][data-sidebar-state="collapsed"] { width: 64px; }
+aside[data-sidebar][data-sidebar-state="expanded"]   { width: 240px; }
 
 /* ---------------------------
     Navigation
@@ -140,23 +141,39 @@ button[data-togglesidebar] {
     all: unset;
     width: 100%;
     cursor: pointer;
-    display: flex;
+    display: inline-flex;
+    position: relative;
     align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
+    gap: 8px;
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    border-radius: 6px;
     color: white;
+    cursor: pointer;
+    width: 100%;
+    min-height: 48px;
+    box-sizing: border-box;
+    margin-bottom: 4px;
     transition: background-color 0.2s ease;
 }
 
 button[data-sidebar-button]:hover,
 button[data-togglesidebar]:hover {
-    background-color: var(--bg-sidebar-hover);
+    background: linear-gradient(
+        135deg,
+        rgba(36, 75, 135, 0.85) 0%,
+        rgba(36, 75, 135, 0.65) 100%
+    );
+    color: white;
 }
 
-/* Bouton actif */
 button[data-sidebar-button].active {
-    background-color: var(--bg-active);
-    color: var(--text-main);
+    background: linear-gradient(
+        135deg,
+        rgba(54, 172, 251, 0.9) 0%,
+        rgba(27, 59, 111, 0.85) 100%
+    );
+    color: white;
     font-weight: 600;
 }
 
@@ -165,9 +182,39 @@ button[data-sidebar-button].active {
 ---------------------------- */
 [data-sidebar-icon] {
     font-size: 20px;
-    min-width: 24px;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     transition: transform var(--transition-speed) ease;
+    flex-shrink: 0;
+}
+
+aside[data-sidebar] [data-sidebar-icon] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    width: 24px;
+    height: 24px;
+    line-height: 1;
+}
+
+aside[data-sidebar] [data-sidebar-icon].lucide-xs { font-size: 1em; }
+aside[data-sidebar] [data-sidebar-icon].lucide-sm { font-size: 1.1em; }
+aside[data-sidebar] [data-sidebar-icon].lucide-md { font-size: 1.2em; }
+aside[data-sidebar] [data-sidebar-icon].lucide-lg { font-size: 1.25em; }
+
+/* Gap entre icône et label dans la sidebar */
+aside[data-sidebar][data-sidebar-state="expanded"] [data-sidebar-label] {
+    margin-left: 10px;
+}
+
+.lucide {
+    width: auto;
+    height: auto;
 }
 
 [data-sidebar-label] {
@@ -175,16 +222,12 @@ button[data-sidebar-button].active {
     transition: opacity 150ms ease, transform 150ms ease;
 }
 
-/* Labels cachés en mode collapsed */
 aside[data-sidebar][data-sidebar-state="collapsed"] [data-sidebar-label] {
     opacity: 0;
     transform: translateX(-6px);
     pointer-events: none;
 }
 
-/* ---------------------------
-    Toggle icon rotation
----------------------------- */
 aside[data-sidebar][data-sidebar-state="collapsed"] button[data-togglesidebar] [data-sidebar-icon] {
     transform: rotate(0deg);
 }
@@ -193,41 +236,25 @@ aside[data-sidebar][data-sidebar-state="expanded"] button[data-togglesidebar] [d
     transform: rotate(180deg);
 }
 
-/* ---------------------------
-    Bouton toggle (bas de sidebar)
----------------------------- */
 li[show-sidebar-button] {
     margin-top: auto;
     border-top: 1px solid var(--border-soft);
 }
 
-/* ---------------------------
-    Accents thématiques (optionnel)
----------------------------- */
-button[data-sidebar-button][data-pagelink="missions"] {
-    border-left: 3px solid var(--water-flood);
-}
-
-button[data-sidebar-button][data-pagelink="antenna"] {
-    border-left: 3px solid var(--nature);
-}
-
-button[data-sidebar-button][data-pagelink="compare"] {
-    border-left: 3px solid var(--earth);
-}
-
-/* Ajoute d'un border-left transparent aux boutons qui n'ont pas d'accent */
-button[data-sidebar-button]:not([data-pagelink="missions"]):not([data-pagelink="antenna"]):not([data-pagelink="compare"]) {
+button[data-sidebar-button][data-pagelink="missions"] { border-left: 3px solid var(--water-flood); }
+button[data-sidebar-button][data-pagelink="antenna,data_port,report"] { border-left: 3px solid var(--nature);}
+button[data-sidebar-button][data-pagelink="compare"]  { border-left: 3px solid var(--earth); }
+button[data-sidebar-button]:not([data-pagelink="missions"]):not([data-pagelink="antenna,data_port,report"]):not([data-pagelink="compare"]) {
     border-left: 3px solid transparent;
 }
 
 /* ---------------------------
-    Container global des notifs
+    Container notifications
 ---------------------------- */
 #notif-container {
     position: fixed;
-    bottom: 22px;
-    right: 28px;
+    bottom: 28px;
+    right: 32px;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -235,9 +262,7 @@ button[data-sidebar-button]:not([data-pagelink="missions"]):not([data-pagelink="
     pointer-events: none;
 }
 
-/* ---------------------------
-    Notification individuelle
----------------------------- */
+/* Notification individuelle */
 .notif {
     pointer-events: auto;
     background: var(--bg-main);
@@ -246,84 +271,501 @@ button[data-sidebar-button]:not([data-pagelink="missions"]):not([data-pagelink="
     padding: 6px 8px;
     min-width: 160px;
     max-width: 260px;
-
     display: flex;
     flex-direction: column;
     gap: 3px;
-
     box-shadow: 0 4px 14px rgba(0,0,0,.15);
-
-    /* état initial */
     opacity: 0;
     transform: translateY(12px);
-
-    transition:
-        opacity .22s ease,
-        transform .22s ease,
-        box-shadow .18s ease;
-
-    /* texte net */
+    transition: opacity .22s ease, transform .22s ease, box-shadow .18s ease;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* état visible */
-.notif.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* ---------------------------
-    Ligne principale (icône + titre)
----------------------------- */
-.notif .main {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-/* Icône */
-.notif i {
-    width: 16px;
-    height: 16px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-/* Titre */
-.notif .title {
-    font-weight: 600;
-    font-size: 0.82rem;
-    line-height: 1;
-    margin: 0;
-}
-
-/* Message */
-.notif .message {
-    font-size: 0.72rem;
-    line-height: 1.2;
-    color: var(--text-muted);
-    margin: 0;
-    padding-left: 22px;
-}
-
-/* Hover léger (sans transform) */
-.notif:hover {
-    box-shadow: 0 8px 22px rgba(0,0,0,.22);
-    transform: translateY(0) scale(1.015);
-}
-
-.notif.visible:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,.22);
-}
-
-/* ---------------------------
-    Couleurs
----------------------------- */
+.notif.visible { opacity: 1; transform: translateY(0); }
+.notif .main { display: flex; align-items: center; gap: 6px; }
+.notif i { width: 16px; height: 16px; font-size: 0.80rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.notif .title { font-weight: 500; font-size: 0.80rem; line-height: 1; margin: 0; }
+.notif .message { font-size: 0.72rem; line-height: 1.2; color: var(--text-muted); margin: 0; padding-left: 22px; }
+.notif:hover { box-shadow: 0 8px 22px rgba(0,0,0,.22); transform: translateY(0) scale(1.015); }
+.notif.visible:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,.22); }
 .notif.success { border-color: var(--water-flood); color: var(--water-flood); }
 .notif.error   { border-color: var(--error); color: var(--error); }
 .notif.info    { border-color: var(--nature); color: var(--nature); }
+
+/* ---------------------------
+    Missions container
+---------------------------- */
+.loader {
+    display: inline-block;
+    width: calc(var(--spacing) * 2);
+    height: calc(var(--spacing) * 2);
+    color: var(--water-flood);
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0%   { transform: rotate(0deg) scale(1); }
+    50%  { transform: rotate(180deg) scale(1.2); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+}
+
+/* ---------------------------
+    Missions – States (loader / empty / error)
+---------------------------- */
+.missions-state {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Card commune */
+.missions-state-card {
+    width: 100%;
+    height: 100%;
+    padding: 24px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    background: var(--bg-main);
+    border: 2px dashed var(--border-soft);
+    border-radius: 12px;
+
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* Icônes lucide */
+.missions-state-card i {
+    display: block;
+    margin-bottom: 12px;
+}
+
+/* Texte commun */
+.missions-state-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+/* =========================
+    Variantes
+========================= */
+.missions-state-card.empty {
+    border-color: var(--water-flood);
+}
+
+.missions-state-card.error {
+    border-color: var(--error);
+}
+
+.missions-state-card.error p {
+    color: var(--error);
+}
+
+/* =========================
+    Tableau missions et boutons
+========================= */
+#missions-lists { 
+    margin-top: 12px; 
+    display: flex;
+    flex: 1;
+    overflow: auto;
+    min-height: 0;
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+#missions-lists::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+#missions-lists::-webkit-scrollbar-thumb {
+    background: var(--water-flood);
+    border-radius: 3px;
+}
+
+#missions-lists > table,
+#missions-lists > .missions-state {
+    flex: 1;
+    width: 100%;
+}
+
+#new-mission-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background-color: var(--nature);
+    color: white;
+    font-family: "IBM Plex Mono", "Courier New", monospace;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+#new-mission-button i {
+    font-size: 16px;
+}
+
+#new-mission-button:hover {
+    background-color: #6ca04b;
+    transform: scale(1.05);
+}
+
+.missions-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.missions-table th, .missions-table td {
+    border: 1px solid var(--border-soft);
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.missions-table th {
+    background-color: var(--sky);
+    color: var(--text-main);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.missions-table tr:nth-child(even) { background-color: rgba(123,160,91,0.08); }
+.missions-table tr:hover { background-color: rgba(54,172,251,0.12); }
+
+.info {
+    margin-top: 14px;
+    margin-bottom: 4px;
+}
+
+#current-tab {
+    margin-left: auto;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--water-deep);
+    background: rgba(54,172,251,0.15);
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+button {
+    font-family: "IBM Plex Mono", "Courier New", monospace;
+    cursor: pointer;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    background-color: var(--water-deep);
+    color: white;
+    transition: all 0.2s ease;
+}
+
+button:hover { background-color: var(--water-flood); color: var(--text-main); }
+button#refresh-button { display: flex; align-items: center; gap: 6px; }
+
+/* ----------------------------
+    Action menu
+---------------------------- */
+.action-menu {
+    position: absolute;
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-soft);
+    border-radius: 6px;
+    padding: 4px 0;
+    min-width: 140px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+}
+
+.mission-action-button {
+    background-color: var(--sky);
+    color: var(--text-main);
+    border-radius: 4px;
+    gap: 6px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 9999;
+}
+
+.mission-action-button i {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.mission-action-button:hover { 
+    background-color: var(--water-flood); 
+    color: var(--text-main); 
+    transform: scale(1.05);
+}
+
+.action-menu button {
+    width: 100%;
+    text-align: left;
+    padding: 6px 12px;
+    background-color: transparent;
+    color: var(--text-main);
+    border: none;
+}
+
+.action-menu button:hover {
+    background-color: var(--water-flood);
+    color: var(--text-main);
+}
+
+/* ---------------------------
+    Barre search + refresh
+---------------------------- */
+input[type="search"] {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border-soft);
+    font-family: "IBM Plex Mono", "Courier New", monospace;
+    margin-right: 8px;
+    outline: none;
+}
+
+input[type="search"]:focus { border-color: var(--water-flood); }
+
+.missions-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.missions-toolbar input[type="search"] {
+    flex: 1;
+}
+
+.missions-toolbar button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+}
+
+/* ---------------------------
+    Boutons missions / delete / new mission
+---------------------------- */
+.missions-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.missions-actions button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* ---------------------------
+    Serial container (style terminal)
+---------------------------- */
+#serial-page {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#serial-page h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--water-deep);
+    margin-bottom: 8px;
+}
+
+#serial-container {
+    background-color: rgba(10, 20, 35, 0.85);
+    backdrop-filter: blur(6px);
+    color: var(--water-flood);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    border: 2px solid var(--border-soft);
+    font-family: "IBM Plex Mono", "Courier New", monospace;
+    letter-spacing: 3px;
+    font-size: 0.90rem;
+    line-height: 1.4;
+    padding: 16px;
+    border-radius: 10px;
+    min-height: 450px;
+    max-height: 500px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+#serial-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#serial-container::-webkit-scrollbar-thumb {
+    background: var(--water-flood);
+    border-radius: 4px;
+}
+
+#serial-container::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+}
+
+/* ---------------------------
+    Curseur
+---------------------------- */
+.cursor {
+    display: inline-block;
+    width: 8px;
+    margin-left: 4px;
+    color: var(--water-flood);
+    text-shadow: none;
+    animation: blink 1s step(1) infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+#line {
+    display: block;
+}
+
+/* ==========================================================
+    CSV-viewer
+========================================================== */
+#csv-viewer {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+
+    background: linear-gradient(
+        180deg,
+        rgba(27, 59, 111, 0.06) 0%,
+        rgba(255,255,255,0.95) 100%
+    );
+
+    border: 2px dashed var(--water-deep);
+    border-radius: 12px;
+
+    padding: 12px;
+    overflow: auto;
+
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+}
+
+#csv-viewer::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+#csv-viewer::-webkit-scrollbar-thumb {
+    background: var(--water-flood);
+    border-radius: 4px;
+}
+
+#csv-viewer::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.05);
+}
+
+.csv-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    font-family: "IBM Plex Mono", "Courier New", monospace;
+}
+
+.csv-table th {
+    position: sticky;
+    top: 0;
+    background: var(--water-deep);
+    color: white;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    padding: 8px;
+    border-bottom: 2px solid var(--water-flood);
+    z-index: 2;
+}
+
+.csv-table td {
+    padding: 6px 8px;
+    border: 1px solid rgba(27, 59, 111, 0.1);
+    color: var(--text-main);
+}
+
+.csv-table tr:nth-child(even) {
+    background-color: rgba(54,172,251,0.06);
+}
+
+.csv-table tr:hover {
+    background-color: rgba(123,160,91,0.15);
+    transition: background 0.2s ease;
+}
+
+.csv-table td:first-child {
+    color: var(--water-deep);
+    font-weight: 600;
+}
+
+.csv-table.compact td {
+    padding: 3px 6px;
+    font-size: 0.75rem;
+}
+
+.csv-empty-state {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.csv-empty-state i {
+    width: 32px;
+    height: 32px;
+    color: var(--water-flood);
+    opacity: 0.8;
+}
+
+.csv-empty-state small {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}

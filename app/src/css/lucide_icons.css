@@ -1,24 +1,52 @@
-.lucide.xs
-{
+/* ---------------------------
+    Tailles icons
+---------------------------- */
+
+:root {
+    --spacing: 1.2rem;
+}
+
+.lucide.xs {
     width: calc(var(--spacing) * .75);
     height: calc(var(--spacing) * .75);
 }
 
-.lucide.sm
-{
+.lucide.sm {
     width: calc(var(--spacing) * .75);
     height: calc(var(--spacing) * .75);
 }
 
-.lucide, .lucide.md
-{
+.lucide, .lucide.md {
     width: calc(var(--spacing) * 1);
     height: calc(var(--spacing) * 1);
 }
 
-.lucide.lg
-{
+.lucide.lg {
     width: calc(var(--spacing) * 1.25);
     height: calc(var(--spacing) * 1.25);
     stroke-width: 1.75px;
+}
+
+/* ---------------------------
+    Icônes des boutons génériques
+---------------------------- */
+button:not(#new-mission-button):not(#refresh-button) {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+button:not(#new-mission-button):not(#refresh-button) i.lucide {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.2em;
+    width: 1.2em;
+    height: 1.2em;
+    line-height: 1;
 }

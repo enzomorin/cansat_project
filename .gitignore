@@ -35,6 +35,7 @@ hardware/src/*backups
 *.zip
 
 #---- Logs ----
+log/
 *.log
 pnpm-debug.log*
 npm-debug.log*

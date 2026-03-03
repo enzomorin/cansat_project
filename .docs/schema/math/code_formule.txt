@@ -1,0 +1,3 @@
+\begin{array}{l}
+\underline{\text{d'après la loi hydrostatique:}} \ \boxed{ h_{max} = \frac{ \Delta{P} }{ ρ_{eau} \times g_{Terre}}} \\ h_{max} = \frac{ P_{ Max-capteur} - P_{Air} }{ ρ_{eau} \times g_{Terre}} \\ \text{or:} \ P_{Max-capteur}=115000 \ Pa \quad P_{Air}=101300 \ Pa \\ ρ_{eau}=1000 \ kg.m^{-3} \quad \text{et} \quad g_{Terre}=9.81 \\ \Delta{P}=115000-101300=13700 \ Pa \\ \text{donc} \ h_{max}=\frac{13700}{1000 \times 9.81}\simeq1.3965 \ m \\ \underline{h_{max}\simeq1.4 \ m}
+\end{array}

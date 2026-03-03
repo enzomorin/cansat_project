@@ -5,7 +5,7 @@ export function initSidebar(loadPage) {
 
     buttons.forEach(button => {
         button.addEventListener("click", () => {
-            const page = button.getAttribute("data-pagelink")
+            const page = button.getAttribute("data-pagelink").split(',')[0].trim()
             loadPage(page)
         })
     })
@@ -13,7 +13,8 @@ export function initSidebar(loadPage) {
     document.addEventListener('pagechanged', (e) => {
         const { page, params } = e.detail
         buttons.forEach(button => {
-            button.classList.toggle("active", button.getAttribute("data-pagelink") === page)
+            const linkedPages = button.getAttribute("data-pagelink").split(',').map(p => p.trim())
+            button.classList.toggle("active", linkedPages.includes(page))
         })
     })
 

@@ -1,15 +1,66 @@
-export default function () {
-    const container = document.getElementById('data-serial')
+const serialContainer = document.getElementById('serial-container')
+const stopBtn = document.getElementById('stop-mission-btn')
+const cancelBtn = document.getElementById('cancel-mission-btn')
 
-    // buffer global
-    window.serialDataHistory ??= []
+window.serialDataHistory ??= []
 
-    window.api.onSerialData(data => {
-        const now = new Date().toLocaleTimeString()
-        const line = `[${now}] ${data}`
 
-        window.serialDataHistory.push(line)
-        container.textContent += line + '\n'
-        container.scrollTop = container.scrollHeight
-    })
+const MAX_LINES = 500
+const cursor = document.createElement("span")
+cursor.classList.add("cursor")
+cursor.textContent = "_"
+
+serialContainer.appendChild(cursor)
+
+function addSerialData(data) {
+    if (!data) return
+
+    window.serialDataHistory.push(data)
+
+    if (window.serialDataHistory.length > MAX_LINES) {
+        window.serialDataHistory.shift()
+    }
+    cursor.remove()
+
+    const line = document.createElement("div")
+    line.textContent = data
+    serialContainer.appendChild(line)
+
+    serialContainer.appendChild(cursor)
+    serialContainer.scrollTop = serialContainer.scrollHeight
 }
+
+function resetTerminal() {
+    window.serialDataHistory = []
+    serialContainer.innerHTML = ""
+    serialContainer.appendChild(cursor)
+}
+
+window.api.onSerialData((data) => {
+    window.serialDataHistory.push(data)
+    addSerialData(data)
+})
+
+setInterval(() => {
+    addSerialData(">> Exemple de donnée " + new Date().toLocaleTimeString());
+}, 2000)
+
+stopBtn.addEventListener('click', async () => {
+    if (!window.missionManager.isActive()) return
+
+    await window.missionManager.endMission()
+    window.notif.success("Mission terminée", null, 3000)
+
+    resetTerminal()
+    window.page.change('report')
+})
+
+cancelBtn.addEventListener('click', async () => {
+    if (!window.missionManager.isActive()) return
+
+    await window.missionManager.cancelMission()
+    window.notif.info("Mission annulée", null, 3000)
+
+    resetTerminal()
+    window.page.change('home')
+})

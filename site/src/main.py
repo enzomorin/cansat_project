@@ -1,10 +1,11 @@
 import uvicorn, aiohttp, os
 from quart import Quart, render_template, request, redirect
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-template_path = os.path.join(BASE_DIR, "templates")
-static_path = os.path.join(BASE_DIR, "static")
-API_URL = "http://127.0.0.1:8000"
+BASE_DIR: str = os.path.dirname(os.path.abspath(__file__))
+template_path: str = os.path.join(BASE_DIR, "templates")
+static_path: str = os.path.join(BASE_DIR, "static")
+API_URL: str = "http://127.0.0.1:8000"
+API_KEY: str = "AZE"
 
 #--------------- QUART APP ---------------
 app: Quart = Quart(
@@ -32,8 +33,9 @@ async def home():
     api_online = True
 
     try:
-        async with app.http.get(f"{API_URL}/db/missions") as resp:
-            missions = await resp.json()
+        async with app.http.get(f"{API_URL}/db/missions", headers={"x-api-key": API_KEY}) as resp:
+            response = await resp.json()
+            missions = response.get("data", [])
 
     except Exception as e:
         print("API OFFLINE:", e)
@@ -42,12 +44,16 @@ async def home():
 
     return await render_template("pages/home.html", missions=missions, api_online=api_online, name = "0b1001101")
 
-@app.route('/edit/<int:mission_id>')
-async def edit(mission_id):
-    async with aiohttp.ClientSession() as session:
-        async with app.http.get(f"{API_URL}/db/missions") as resp: all_missions = await resp.json()
+@app.route('/edit')
+async def edit():
+    mission_id: int = request.args.get("id", type=int)
+    async with app.http.get(f"{API_URL}/db/missions?id={mission_id}", headers={"x-api-key": API_KEY}) as resp: response = await resp.json()
 
-    mission = next((m for m in all_missions if m["id"] == mission_id), None)
+    mission = response.get("data", [])[0]
+
+    async with app.http.get(f"{API_URL}/db/missions/csv?id={mission_id}", headers={"x-api-key": API_KEY}) as resp_csv:
+        csv_resp = await resp_csv.json()
+        mission["csv_content"] = csv_resp.get("csv", "")
 
     return await render_template("pages/edit_mission.html", mission=mission, api_online=True)
 
@@ -55,36 +61,38 @@ async def edit(mission_id):
 #--------------- METHOD ---------------
 @app.route("/db/add", methods=["POST"])
 async def add_mission():
-        form = await request.form
-        data = {
-            "name": form.get("name"),
-            "csv_path": form.get("csv_path"),
-            "location": form.get("location"),
-        }
-        async with app.http.post(f"{API_URL}/db/missions", json=data, timeout=3) as resp:
-            if resp.status != 200:
-                return "Impossible d'ajouter de mission — API offline", 500
-
-        return redirect("/")
-
-@app.route("/db/edit/<int:mission_id>", methods=["POST"])
-async def edit_mission(mission_id):
     form = await request.form
     data = {
         "name": form.get("name"),
-        "csv_path": form.get("csv_path"),
         "location": form.get("location"),
+        "csv_content": form.get("csv_content", "")
     }
+    async with app.http.post(f"{API_URL}/db/missions", json=data, headers={"x-api-key": API_KEY}, timeout=3) as resp:
+        if resp.status != 200:
+            return "Impossible d'ajouter de mission — API offline", 500
 
-    async with app.http.put(f"{API_URL}/db/missions/{mission_id}", json=data, timeout=3) as rep:
+    return redirect("/")
+
+@app.route("/db/edit", methods=["POST"])
+async def edit_mission():
+    mission_id: int = request.args.get("id", type=int)
+    form = await request.form
+    data = {
+        "name": form.get("name"),
+        "location": form.get("location"),
+        "csv_content": form.get("csv_content", "")
+    }
+    async with app.http.put(f"{API_URL}/db/missions?id={mission_id}", json=data, headers={"x-api-key": API_KEY}, timeout=3) as rep:
         if rep.status != 200:
             return "Impossible de modifier la mission — API offline", 500
 
     return redirect("/")
 
-@app.route("/db/delete/<int:mission_id>", methods=["GET"])
-async def delete_mission(mission_id):
-    async with app.http.delete(f"{API_URL}/db/missions/{mission_id}", timeout=3) as resp:
+@app.route("/db/delete")
+async def delete_mission():
+    mission_id: int = request.args.get("id", type=int)
+
+    async with app.http.delete(f"{API_URL}/db/missions?id={mission_id}", headers={"x-api-key": API_KEY}, timeout=3) as resp:
         if resp.status != 200:
             return "Impossible de supprimer de mission — API offline", 500
         
