@@ -27,6 +27,7 @@
     "@electron-forge/maker-rpm": "^7.2.0",
     "electron-installer-redhat": "^3.4.0",
     "electron-squirrel-startup": "^1.0.1",
+    "leaflet": "^1.9.4",
     "lucide": "^0.563.0",
     "serialport": "^13.0.0"
   },

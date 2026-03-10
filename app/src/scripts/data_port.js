@@ -4,7 +4,6 @@ const cancelBtn = document.getElementById('cancel-mission-btn')
 
 window.serialDataHistory ??= []
 
-
 const MAX_LINES = 500
 const cursor = document.createElement("span")
 cursor.classList.add("cursor")
@@ -37,13 +36,8 @@ function resetTerminal() {
 }
 
 window.api.onSerialData((data) => {
-    window.serialDataHistory.push(data)
     addSerialData(data)
 })
-
-setInterval(() => {
-    addSerialData(">> Exemple de donnée " + new Date().toLocaleTimeString());
-}, 2000)
 
 stopBtn.addEventListener('click', async () => {
     if (!window.missionManager.isActive()) return
@@ -58,7 +52,7 @@ stopBtn.addEventListener('click', async () => {
 cancelBtn.addEventListener('click', async () => {
     if (!window.missionManager.isActive()) return
 
-    await window.missionManager.cancelMission()
+    await window.missionManager.cancelMission(true)
     window.notif.info("Mission annulée", null, 3000)
 
     resetTerminal()

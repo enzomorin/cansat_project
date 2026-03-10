@@ -5,13 +5,22 @@ export function initSidebar(loadPage) {
 
     buttons.forEach(button => {
         button.addEventListener("click", () => {
-            const page = button.getAttribute("data-pagelink").split(',')[0].trim()
-            loadPage(page)
+            const pages = button.getAttribute("data-pagelink").split(',').map(p => p.trim())
+            if (pages.includes("antenna")) {
+                if (window.missionManager.isActive()) {
+                    window.missionManager.restoreNavigation()
+                } else {
+                    loadPage("antenna")
+                }
+                return
+            }
+
+            loadPage(pages[0])
         })
     })
 
     document.addEventListener('pagechanged', (e) => {
-        const { page, params } = e.detail
+        const { page } = e.detail
         buttons.forEach(button => {
             const linkedPages = button.getAttribute("data-pagelink").split(',').map(p => p.trim())
             button.classList.toggle("active", linkedPages.includes(page))

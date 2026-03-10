@@ -21,7 +21,8 @@ const windowSettings =
     {
         preload: path.join(__dirname, 'src', 'preload.js'),
         contextIsolation: true,
-        nodeIntegration: true
+        nodeIntegration: true,
+        sandbox: false
     }
 }
 
@@ -105,21 +106,30 @@ function registerIpcHandler() {
         return await SerialPort.list()
     })
 
-    ipcMain.handle('connect-port', async (event, portPath) => {
-        if (serialPort?.isOpen) {
-            await new Promise(port => serialPort.close(port))
-        }
-
-        // Remove all listeners
-        serialPort?.removeAllListeners()
+    ipcMain.handle('connect-port', async (e, portPath) => {
+        if (!portPath || typeof portPath !== 'string' || portPath.trim() === "") {
+            if (serialPort && serialPort.isOpen) await new Promise((resolve, reject) => serialPort.close(err => err ? reject(err) : resolve()))
+            serialPort?.removeAllListeners()
             parser?.removeAllListeners()
+            serialPort = null
+            parser = null
+            return { connected: false }
+        }
+        portPath = portPath.trim()
+
+        if (serialPort && serialPort.isOpen) {
+            await new Promise((resolve, reject) => serialPort.close(err => err ? reject(err) : resolve()))
+            serialPort.removeAllListeners()
+            parser.removeAllListeners()
+            serialPort = null
+            parser = null
+        }
 
         serialPort = new SerialPort({
             path: portPath,
             baudRate: 115200,
             autoOpen: false
         })
-
         parser = serialPort.pipe(new ReadlineParser({ delimiter: '\r\n' }))
 
         parser.on('data', async (data) => {
@@ -136,19 +146,29 @@ function registerIpcHandler() {
         })
 
         serialPort.on('error', err => {
-            console.error('Erreur série:', err.message)
             mainWindow?.webContents.send('serial-error', err.message)
+            serialPort?.removeAllListeners()
+            parser?.removeAllListeners()
+            serialPort = null
+            parser = null
         })
 
         serialPort.on('close', () => {
             mainWindow?.webContents.send('serial-disconnected')
+            serialPort?.removeAllListeners()
+            parser?.removeAllListeners()
+            serialPort = null
+            parser = null
         })
 
-        await new Promise((resolve, reject) => {
-            serialPort.open(err => err ? reject(err) : resolve())
-        })
+        try {
+            await new Promise((resolve, reject) => serialPort.open(err => err ? reject(err) : resolve()))
+        } catch (err) {
+            return { connected: false, error: err.message }
+        }
 
         mainWindow?.webContents.send('serial-connected', { port: portPath })
+
         return { connected: true }
     })
 
@@ -170,9 +190,7 @@ function registerIpcHandler() {
 
     ipcMain.handle('finalize-mission', async (_, { csvPath, reportName }) => {
         try {
-            if (!csvPath) {
-                return { success: false, error: "Aucun fichier CSV" }
-            }
+            if (!csvPath) return { success: false, error: "Aucun fichier CSV" }
 
             await ensureMissionsDir()
 
@@ -237,6 +255,14 @@ app.on('ready', () => {
             createwindow()
         }
     })
+})
+
+app.on('before-quit', async (event) => {
+    if (serialPort && serialPort.isOpen) {
+        await new Promise(resolve => serialPort.close(() => resolve()))
+        serialPort = null
+        parser = null
+    }
 })
 
 // closing app

@@ -1,4 +1,5 @@
 const container = document.getElementById('notif-container');
+const limit = 3
 
 function creatIcon(type) {
     switch (type) {
@@ -9,6 +10,12 @@ function creatIcon(type) {
 }
 
 export function creatNotif(title, message = null, duration = 3000, type = 'info') {
+    if (container.children.length >= limit) {
+        const oldestNotif = container.firstChild;
+        oldestNotif.classList.remove('visible');
+        setTimeout(() => oldestNotif.remove(), 300);
+    }
+
     const notif = document.createElement('div')
     notif.classList.add('notif', type)
 

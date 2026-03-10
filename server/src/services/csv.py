@@ -57,6 +57,6 @@ def restore_from_trash(name: str):
 
 
 def delete_file(name: str):
-    path = os.path.join(CSV_DIR, name)
+    path = os.path.join(TRASH_DIR, name)
     if os.path.exists(path):
         os.remove(path)

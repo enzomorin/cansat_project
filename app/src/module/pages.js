@@ -15,12 +15,12 @@ export async function changePage(page, params = {}, options = {}) {
         document.dispatchEvent(new CustomEvent('pagechanged', { detail: { page, params }}))
 
         try {
-            const module = await import(`../${pathScript}?v=${Date.now()}`);
-            if (module.default) { module.default({ params, options }); }
+            const module = await import(`../${pathScript}?v=${Date.now()}`)
+            if (module.default) { module.default({ params, options }) }
         } 
         catch (err) {}
     }
-    catch (err) { content.innerHTML = `<p>Error loading page.  ${err}</p>`; }
+    catch (err) { content.innerHTML = `<p>Error loading page.  ${err}</p>` }
 }
 
 export default { changePage }

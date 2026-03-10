@@ -16,16 +16,22 @@ async function listPorts() {
 
 // connexion au port sélectionné
 connectButton.addEventListener('click', async () => {
-    const selected = portSelect.value
-    if (!selected) return
+    const selected = portSelect.value?.trim()
+    if (!selected) {
+        statusSP.textContent = 'Sélectionnez un port valide'
+        return
+    }
 
     statusSP.textContent = 'Connexion en cours...'
 
     try {
-        await window.api.connectPort(selected)
-        window.close()
+        const result = await window.api.connectPort(selected) 
+        if (result.connected) {
+            statusSP.textContent = `✅ Connecté à ${selected}`
+            setTimeout(() => window.close(), 500)
+        } else statusSP.textContent = '❌ Impossible de se connecter'
     } catch (err) {
-        statusSP.textContent = `❌ ${String(err)}`
+        statusSP.textContent = `❌ Erreur : ${String(err)}`
     }
 })
 

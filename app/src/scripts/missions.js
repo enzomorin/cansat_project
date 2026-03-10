@@ -179,7 +179,7 @@ function throwErrorText(error) {
 }
 
 function appendMissions(missions) {
-    missionsContainer.innerHTML = null
+    missionsContainer.innerHTML = ""
 
     const table = document.createElement('table')
     table.className = 'missions-table'
@@ -212,16 +212,26 @@ function appendMissions(missions) {
                 value = new Date(value).toLocaleString()
             } else if (key === 'duration' && !value) {
                 value = 'Not set'
-            }
+            } if (key === "location") {
+                td.textContent = value || ""
+                const coords = window.geoco.parseCoordinates(value)
 
-            td.textContent = value
+                if (coords) {
+                    window.geoco.Geocode(coords.lat, coords.lon)
+                        .then(place => {
+                            if (place) td.textContent = place
+                        })
+                }
+            } else {
+                td.textContent = value ?? ""
+            }
             row.appendChild(td)
         })
 
         const tdButton = document.createElement('td')
         const button = document.createElement('button')
         button.className = 'mission-action-button'
-        button.setAttribute('arial-level', "More options")
+        button.setAttribute('aria-label', "More options")
         button.innerHTML = '<i data-lucide="ellipsis"></i>'
 
         if (currentTab === 'missions') {
@@ -257,6 +267,7 @@ async function MarkMission(mission_id) {
         `/soft-delete?id=${mission_id}`,
         "PUT",
         true,
+        null,
         `Mission #${mission_id} moved to trash`,
         `Error moving mission #${mission_id} to trash`
     )
@@ -268,6 +279,7 @@ async function RestoreMission(mission_id) {
         `/restore?id=${mission_id}`,
         "PUT",
         true,
+        null,
         `Mission #${mission_id} restored`,
         `Error restoring mission #${mission_id}`
     )
@@ -279,6 +291,7 @@ async function DeleteMission(mission_id) {
         `/?id=${mission_id}`,
         "DELETE",
         true,
+        null,
         `Mission #${mission_id} permanently deleted`,
         `Error deleting mission #${mission_id}`
     )

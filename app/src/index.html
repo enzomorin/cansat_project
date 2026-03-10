@@ -3,11 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' http://localhost:8000;"/>
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'"/>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' http://localhost:8000 https://nominatim.openstreetmap.org; img-src 'self' https://a.tile.openstreetmap.org https://b.tile.openstreetmap.org https://c.tile.openstreetmap.org data:;"/>
     <title>HydroVinci - dashboard and telemetry</title>
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/lucide_icons.css">
+    <link rel="stylesheet" href="../node_modules/leaflet/dist/leaflet.css">
+    <link rel="stylesheet" href="css/fix-leaflet.css">
 </head>
 
 <body>

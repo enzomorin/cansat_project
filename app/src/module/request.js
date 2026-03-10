@@ -1,11 +1,12 @@
 const API_URL = "http://localhost:8000/db/missions"
 const API_KEY = "AZE"
 
-export async function fetchAPI(endpoint, method = "GET", notif = true, successMsg = "request done !", errorMsg = "sorry, something went wrong...") {
+export async function fetchAPI(endpoint, method = "GET", notif = true, body = null, successMsg = "request done !", errorMsg = "sorry, something went wrong...") {
     try {
         const resp = await fetch(API_URL + endpoint, {
             method,
-            headers: { "x-api-key": API_KEY }
+            headers: { "x-api-key": API_KEY, "Content-Type": "application/json" },
+            body: body ? JSON.stringify(body): null
         })
         if (!resp.ok) throw new Error(resp.status)
         const result = await resp.json()
@@ -18,6 +19,6 @@ export async function fetchAPI(endpoint, method = "GET", notif = true, successMs
     } catch (err) {
         if (notif) window.notif.error(errorMsg)
 
-        return null
+        throw err
     }
 }

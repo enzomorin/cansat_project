@@ -174,3 +174,5 @@ C’est calme, technique, indiscutable.
 Si ton prof est :
 
 ouvert → défends une appli PC minimale
+
+AJOUTER FCT DOWNLOAD les dans un fichier json avec les propriéter ou sinon juste csv si compliqué À LA DB
