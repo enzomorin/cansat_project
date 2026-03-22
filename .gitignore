@@ -16,7 +16,6 @@ node_modules/
 out/
 
 #---- PlatfromIO ----
-firmeware/
 .pio/
 *.pioenvs
 *.elf
