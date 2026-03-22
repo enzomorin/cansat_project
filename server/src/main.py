@@ -2,6 +2,7 @@ import uvicorn, os
 from fastapi import FastAPI, Header, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
+from services.csv import sanitize_filename
 from database import DataBase, Missions, MissionCreate, MissionUpdate
 
 DB_PATH: str = "server/database/missions.db"
@@ -60,7 +61,7 @@ async def get_missions(
     else: data = db.get_all(include_deleted=include_deleted)
 
     # when no data means mission not found
-    if not data: return {"success": False, "data": "Mission not found"}
+    if data is None: return {"success": False, "data": "Mission not found"}
 
     return {
         "success": True,
@@ -71,13 +72,37 @@ async def get_missions(
 async def get_csv(id: int, x_api_key: str | None = Header(None)):
     if not secure(x_api_key):
         return check_key(x_api_key)
-    csv = db.get_csv(id)
 
-    if csv is None: return {"success": False, "data": "Not found"}
-    return {
-        "success": True,
-        "data": csv
-    }
+    csv = db.get_csv(id)
+    if csv is None:
+        return {"success": False, "data": "Not found"}
+
+    return {"success": True, "data": csv}
+
+@app.get("/db/missions/csv/download")
+async def download_csv(id: int, filename: str | None = None, x_api_key: str | None = Header(None)):
+    if not secure(x_api_key):
+        return check_key(x_api_key)
+
+    path = db.get_csv_path(id)
+    if not path:
+        return {"success": False, "data": "CSV not found"}
+
+    mission = db.get(id)
+    download_name = sanitize_filename(filename or mission.name)
+
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read()
+        return {
+            "success": True, "data": content, 
+            "filename": f"{download_name}.csv"
+            }
+    except Exception as error:
+        return {
+            "success": False, 
+            "data": str(error)
+            }
 
 @app.post("/db/missions")
 async def add_mission(mission: MissionCreate | None = None, x_api_key: str | None = Header(None)):

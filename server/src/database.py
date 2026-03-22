@@ -59,6 +59,13 @@ class DataBase:
 
         return read_csv(mission.csv_file)
     
+    @open_session(commit=False)
+    def get_csv_path(self, session, id: int) -> str | None:
+        mission = session.get(Missions, id)
+        if not mission:
+            return None
+        return get_csv_path(mission.csv_file)
+    
     @open_session()
     def insert(self, session, mission: Missions, csv_content: str) -> bool:
         try:

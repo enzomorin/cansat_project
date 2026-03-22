@@ -60,3 +60,15 @@ def delete_file(name: str):
     path = os.path.join(TRASH_DIR, name)
     if os.path.exists(path):
         os.remove(path)
+
+
+def get_csv_path(name: str, include_trash: bool = False) -> str | None:
+    """Returns the full path of a CSV file, checking active and optionally trash."""
+    active_path = os.path.join(CSV_DIR, name)
+    if os.path.exists(active_path):
+        return active_path
+    if include_trash:
+        trash_path = os.path.join(TRASH_DIR, name)
+        if os.path.exists(trash_path):
+            return trash_path
+    return None

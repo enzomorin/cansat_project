@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; 
+                script-src 'self'; 
+                style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+                font-src 'self' https://fonts.gstatic.com;
+                worker-src blob:;
+                connect-src 'self' http://localhost:8000 https://nominatim.openstreetmap.org; 
+                img-src 'self' https://*.tile.openstreetmap.org data: blob:;">
+    <title>HydroVinci - dashboard and telemetry</title>
+
+    <!-- CSS principaux -->
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../../node_modules/leaflet/dist/leaflet.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <aside data-sidebar data-sidebar-state="collapsed">
+            <nav data-sidebar-nav>
+                <ul data-sidebar-list>
+                    <li home-button>
+                        <button data-sidebar-button data-pagelink="home">
+                            <i data-sidebar-icon data-lucide="house" class="lg"></i>
+                            <span data-sidebar-label>Home</span>
+                        </button>
+                    </li>
+                    <li missions-button>
+                        <button data-sidebar-button data-pagelink="missions">
+                            <i data-sidebar-icon data-lucide="database" class="lg"></i>
+                            <span data-sidebar-label>Missions</span>
+                        </button>
+                    </li>
+                    <li compare-button>
+                        <button data-sidebar-button data-pagelink="compare">
+                            <i data-sidebar-icon data-lucide="chart-spline" class="lg"></i>
+                            <span data-sidebar-label>Compare missions</span>
+                        </button>
+                    </li>
+                    <li antenna-button>
+                        <button data-sidebar-button data-pagelink="antenna,data_port,report">
+                            <i data-sidebar-icon data-lucide="plus" class="lg"></i>
+                            <span data-sidebar-label>New mission</span>
+                        </button>
+                    </li>
+                    <li info-button>
+                        <button data-sidebar-button data-pagelink="info">
+                            <i data-sidebar-icon data-lucide="badge-info" class="lg"></i>
+                            <span data-sidebar-label>About us</span>
+                        </button>
+                    </li>
+                    <li show-sidebar-button>
+                        <button data-togglesidebar>
+                            <i data-sidebar-icon data-lucide="panel-right-close" class="lg"></i>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+    </div>
+
+    <!-- Contenu principal -->
+    <main id="content" class="pages"></main>
+
+    <!-- Notifications -->
+    <div id="notif-container" class="notif-container"></div>
+
+    <!-- JS principal -->
+    <script type="module" src="../renderer/renderer.js"></script>
+</body>
+</html>

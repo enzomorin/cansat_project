@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" 
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';">
+    <link rel="stylesheet" href="../css/dialog.css">
+    <title>Port série</title>
+</head>
+<body>
+    <div class="serial-dialog">
+        <header>
+            <h3>Connecter un port série</h3>
+        </header>
+        <main>
+            <select id="port-select">
+                <option value="">-- Sélectionner un port --</option>
+            </select>
+            <button id="connect-btn">Se connecter</button>
+            <p id="status">Aucun port connecté</p>
+            <footer>
+                <button id="close-btn">Fermer</button>
+            </footer>
+        </main>
+    </div>
+
+    <script type="module" src="../renderer/scripts/ports.js"></script>
+</body>
+</html>

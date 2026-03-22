@@ -1,0 +1,38 @@
+<div id="report-page">
+    <div>
+        <form class="info-box">
+            <h2>Mission report:</h2>
+
+            <input 
+                type="text"
+                id="mission-name"
+                placeholder="Nom de la mission"
+                required
+                class="input"
+            >
+
+            <input 
+                type="text"
+                id="mission-location"
+                placeholder="Localisation"
+                required
+                class="input"
+            >
+        </form>
+        <h2>Carte de la mission:</h2>
+        <div id="map-container"></div>
+        <div class="radius-control">
+            <label for="mission-radius">Mission radius</label>
+            <input id="mission-radius" type="range" min="10" max="500" step="10" value="50"/>
+            <span id="radius-value">50 m</span>
+        </div>
+    </div>
+    <div>
+        <h2>Csv data:</h2>
+        <div id="csv-viewer"></div>
+    </div>
+    <div class="missions-actions">
+        <button id="commit-report-btn">Commit Report</button>
+        <button id="cancel-report-btn">Cancel Report</button>
+    </div>
+</div>

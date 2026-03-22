@@ -1,0 +1,70 @@
+<div class="compare-page">
+    <div class="compare-toolbar">
+        <div class="compare-sources">
+            <button id="add-mission-btn">
+                <i data-lucide="database" class="md"></i>From mission
+            </button>
+            <button id="add-file-btn">
+                <i data-lucide="file-up" class="md"></i>Import file
+            </button>
+            <button id="clear-btn" class="btn-ghost">
+                <i data-lucide="trash-2" class="md"></i>Clear all
+            </button>
+        </div>
+
+        <div class="compare-controls">
+            <div class="axis-picker">
+                <label for="x-col-select">X axis</label>
+                <select id="x-col-select" disabled>
+                    <option value="">— load data —</option>
+                </select>
+            </div>
+
+            <div class="axis-picker">
+                <label>Y axis</label>
+                <div class="y-col-checkboxes" id="y-col-checkboxes">
+                    <span class="axis-empty">— load data —</span>
+                </div>
+            </div>
+
+            <div class="axis-picker">
+                <label for="step-select">Sample</label>
+                <select id="step-select">
+                    <option value="1">Every point (1s)</option>
+                    <option value="5">Every 5s</option>
+                    <option value="10" selected>Every 10s</option>
+                    <option value="30">Every 30s</option>
+                    <option value="60">Every 1 min</option>
+                    <option value="300">Every 5 min</option>
+                </select>
+            </div>
+
+            <div class="axis-picker">
+                <label for="chart-type-select">Type</label>
+                <select id="chart-type-select">
+                    <option value="area" selected>Area</option>
+                    <option value="line">Line</option>
+                    <option value="bar">Bar</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="compare-legend" id="compare-legend"></div>
+
+    <div class="compare-chart-wrapper">
+        <canvas id="compare-chart"></canvas>
+        <div class="compare-empty state-card" id="compare-empty">
+            <i data-lucide="chart-spline"></i>
+            <p>Add a mission or import a file to start</p>
+        </div>
+    </div>
+
+    <div id="csv-viewer"></div>
+
+    <div class="missions-actions">
+        <button id="quit-btn" class="btn-ghost">
+            <i data-lucide="arrow-left" class="md"></i>Back
+        </button>
+    </div>
+</div>

@@ -1,18 +1,26 @@
 #include <Arduino.h>
+#include <System_Check.h>
+#include <SD_Logger.h>
+#include <SERVO.h>
+#include "config.h"
 
-// put function declarations here:
-int myFunction(int, int);
+SD_Logger SD(Serial1);
+SERVO_Controller servo(Pins::SERVO, 180);
+SERVO_Logic seroLogic(servo, 5000);
+// for the servo and other with pins do Pins::SERVO for example
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+    SD.begin();
+    servo.begin();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
+    servo.setPosition(90);
+    SD.startLine();
+    SD.addField("TEMP");
+    SD.addField("23.5");
+    SD.addField("1013");
+    SD.endLine();
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+    delay(1000);
 }
