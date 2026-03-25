@@ -14,10 +14,13 @@ class SERVO_Controller {
 
         // Get the last set position
         uint8_t getPosition() const;
+
     private:
         Servo _servo;
+
         uint8_t _pin;
         uint8_t _angPos = 0;
+
         uint8_t _base = 0;
         uint8_t _limit = 180;
 };

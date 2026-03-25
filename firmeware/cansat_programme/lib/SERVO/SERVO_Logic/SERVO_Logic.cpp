@@ -1,6 +1,6 @@
 #include "SERVO_Logic.h"
 
-SERVO_Logic::SERVO_Logic(SERVO_Controller& servo, unsigned long parachuteDelayMs = 5000)
+SERVO_Logic::SERVO_Logic(SERVO_Controller& servo, unsigned long parachuteDelayMs)
     :_servo(servo), _parachuteDelayMS(parachuteDelayMs)
 {
     _stateTime = millis();

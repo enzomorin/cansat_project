@@ -6,7 +6,9 @@ SERVO_Controller::SERVO_Controller(uint8_t pin, uint8_t limit)
 void SERVO_Controller::begin() {
     _servo.attach(_pin);
 
-    _servo.write(_base);
+    _angPos = _base;
+
+    setPosition(_angPos);
 }
 
 void SERVO_Controller::setPosition(int angPos) {

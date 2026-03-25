@@ -7,6 +7,7 @@ class SERVO_Logic {
         explicit SERVO_Logic(SERVO_Controller& servo, unsigned long parachuteDelayMs = 5000);
         
         void update(bool inWater);
+        
     private:
         SERVO_Controller& _servo;
 
