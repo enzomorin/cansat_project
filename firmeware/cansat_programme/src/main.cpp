@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Screen.h>
 #include <SD_Logger.h>
 #include <SPI_Radio.h>
 #include <SERVO_Controller.h>
@@ -8,6 +9,8 @@
 #include "config.h"
 
 // Objects
+Screen display(Pins::DISPLAY_RST, Pins::DISPLAY_ADDR);
+
 SD_Logger SD(Serial1);
 
 SERVO_Controller servo(Pins::SERVO);
@@ -37,12 +40,17 @@ ServoState servoState = ServoState::PARACHUTE;
 void setup() {
     Serial.begin(115200);
 
+    display.begin();
+
     SD.begin(9600);
 
     const uint8_t status = systemCheck.run();
     if (status != System_Check::OK) {
         Serial.print("system check failed at 0x");
         Serial.println(status, HEX);
+        char statusStr[5];
+        snprintf(statusStr, sizeof(statusStr), "0x%02X", status);
+        display.showText(statusStr);
     }
 
     servo.begin();
@@ -53,6 +61,8 @@ void loop() {
 
     if (now - lastServo >= Timings::SERVO_PERIOD_MS) { // give servo time to move
         lastServo = now;
+
+        display.showText("servo rotate");
 
         if (servoState == ServoState::PARACHUTE) {
             servoLogic.update(false);
@@ -66,6 +76,8 @@ void loop() {
     // SD logging
     if (now - lastLog >= Timings::LOG_PERIOD_MS) {
         lastLog = now;
+
+        display.showText("thing logged");
 
         SD.startLine();
         SD.addInt(counter++);
