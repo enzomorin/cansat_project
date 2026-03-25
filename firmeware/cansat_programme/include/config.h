@@ -5,7 +5,7 @@
 namespace Pins {
     constexpr uint8_t SERVO = 3;
     constexpr uint8_t DISPLAY_RST = 2;
-    constexpr uint8_t DISPLAY_ADDR = 0x3C;
+    constexpr uint8_t DISPLAY_ADDR = 0x78;
 }
 
 namespace Timings {
