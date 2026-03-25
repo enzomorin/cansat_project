@@ -1,6 +1,8 @@
 #pragma once
-#include "../SERVO_Controller/SERVO_Controller.h"
 #include <Arduino.h>
+#include "../SERVO_Controller/SERVO_Controller.h"
+
+class SERVO_Controller;
 
 class SERVO_Logic {
     public:

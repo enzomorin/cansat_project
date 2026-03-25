@@ -19,9 +19,10 @@ void SERVO_Logic::update(bool inWater) {
             break;
 
         case State::PARACHUTE:
-            if (inWater) {
+            if (inWater && now - _stateTime >= _parachuteDelayMS) {
                 _servo.setPosition(ANCHOR_POS);
                 _state = State::ANCHOR;
+                _stateTime = now;
             }
             break;
 

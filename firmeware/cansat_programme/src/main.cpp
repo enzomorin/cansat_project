@@ -1,7 +1,8 @@
 #include <Arduino.h>
 #include <SD_Logger.h>
 #include <SPI_Radio.h>
-#include <SERVO.h>
+#include <SERVO_Controller.h>
+#include <SERVO_Logic.h>
 #include <Sensors.h>
 #include <System_Check.h>
 #include "config.h"
@@ -36,13 +37,13 @@ ServoState servoState = ServoState::PARACHUTE;
 void setup() {
     Serial.begin(115200);
 
+    SD.begin(9600);
+
     const uint8_t status = systemCheck.run();
     if (status != System_Check::OK) {
         Serial.print("system check failed at 0x");
         Serial.println(status, HEX);
     }
-
-    SD.begin(9600);
 
     servo.begin();
 }
