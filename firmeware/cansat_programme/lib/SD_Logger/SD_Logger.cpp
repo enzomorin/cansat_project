@@ -12,32 +12,34 @@ namespace {
 SD_Logger::SD_Logger(HardwareSerial& serial)
     :_serial(serial) {}
 
-void SD_Logger::begin(uint32_t baud) {
+bool SD_Logger::begin(uint32_t baud) {
     _serial.begin(baud);
+    delay(500);
+    sendEscape();
 
     waitFor('>', BOOT_TIMEOUT_MS); // time to boot
-
     DrainRX();
 
     createMissionFile(); // based on config 2 for command and 1 Sequential Log and 0 to create a new file
     writeHeader();
+
+    _ready = true;
+    return true;
 }
 
 void SD_Logger::createMissionFile() {
-    _missionID++;
-
-    snprintf(_currentFile, sizeof(_currentFile), "M%04u.CSV", _missionID);
+    snprintf(_currentFile, sizeof(_currentFile), "MISSION.CSV");
 
     _serial.print("new ");
     _serial.print(_currentFile);
-    _serial.write('\r'); // carriage return only
-    waitFor('>', PROMPT_DELAY_MS); // wait for command to complete
+    _serial.write('\r');
+    waitFor('>', PROMPT_DELAY_MS);
     DrainRX();
 
     _serial.print("append ");
     _serial.print(_currentFile);
     _serial.write('\r');
-    waitFor('<', PROMPT_DELAY_MS); // '<' = file open, streaming mode active
+    waitFor('<', PROMPT_DELAY_MS);
     DrainRX();
 }
 
@@ -46,6 +48,11 @@ void SD_Logger::writeHeader() {
 
     addField("time_s");
     addField("temperature_C");
+    addField("pressure_hPa");
+    addField("altitude_m");
+    addField("water_kPa");
+    addField("water_depth_m");
+    addField("rpm");
 
     endLine();
 }
@@ -107,20 +114,30 @@ void SD_Logger::addFloat(float value, uint8_t precision) {
 
     // Integer part
     int32_t intPart = (int32_t)value;
-    addInt(intPart);
+    char tmp[12];
+    itoa(intPart, tmp, 10);
+    size_t tlen = strlen(tmp);
 
-    // Decimal part
+    // integer part
+    if (_index > 0) {
+        if (_index >= BUFFER_SIZE - 1) { _overflow = true; return; }
+        _buffer[_index++] = ',';
+    }
+    if (_index + tlen >= BUFFER_SIZE) { _overflow = true; return; }
+    memcpy(&_buffer[_index], tmp, tlen);
+    _index += tlen;
+
     if (precision == 0) return;
-
     addChar('.');
 
     float frac = value - (float)intPart;
-
     for (uint8_t i = 0; i < precision; i++) {
         frac *= 10.0f;
+        if (frac < 0.0f) frac = 0.0f;
         uint8_t digit = (uint8_t)frac;
         addChar('0' + digit);
-        frac -= digit;
+        frac -= (float)digit; 
+        if (frac < 0.0f) frac = 0.0f;
     }
 }
 

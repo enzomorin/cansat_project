@@ -36,11 +36,12 @@ void Screen::showDefaultText() {
 void Screen::showText(const char* c) {
     _display.clearDisplay();
 
+    _display.setCursor(23, 0);
     _display.println(c);
 
     _display.display();
 
-    delay(1000);
+    delay(500);
 }
 
 void Screen::invert(bool state) {

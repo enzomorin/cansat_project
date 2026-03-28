@@ -6,7 +6,9 @@ class SD_Logger {
     public:
         explicit SD_Logger(HardwareSerial& serial);
 
-        void begin(uint32_t baud);
+        bool begin(uint32_t baud);
+
+        bool isReady() const { return _ready; }
 
         // CSV building
         void startLine();
@@ -24,14 +26,13 @@ class SD_Logger {
     private:
         HardwareSerial& _serial;
 
+        bool _ready = false;
+
         // File management
         void createMissionFile();
         void writeHeader();
 
-        uint16_t _missionID = 0;
-
         char _currentFile[13];
-
         static constexpr size_t BUFFER_SIZE = 256;
         char _buffer[BUFFER_SIZE];
         size_t _index = 0;

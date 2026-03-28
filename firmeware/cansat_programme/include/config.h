@@ -4,14 +4,17 @@
 
 namespace Pins {
     constexpr uint8_t SERVO = 3;
-    constexpr uint8_t DISPLAY_RST = 2;
-    constexpr uint8_t DISPLAY_ADDR = 0x78;
+    constexpr uint8_t WATER_PRESSURE = A2;
+    constexpr uint8_t DISPLAY_RST = 1;
+    constexpr uint8_t DISPLAY_ADDR = 0x3C;
+    constexpr uint8_t BME_ADDR = 0x76;
+    constexpr uint8_t HALL_SENSOR = 2;
 }
 
 namespace Timings {
     constexpr uint32_t SERVO_LOGIC_DELAY_MS = 5000;
 
-    constexpr uint32_t SERVO_PERIOD_MS   = 250;
+    constexpr uint32_t SERVO_PERIOD_MS   = 2000;
     constexpr uint32_t LOG_PERIOD_MS     = 1000;
     constexpr uint32_t FLUSH_PERIOD_MS   = 10000;
 }

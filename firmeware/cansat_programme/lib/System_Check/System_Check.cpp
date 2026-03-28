@@ -1,16 +1,25 @@
 #include "System_Check.h"
 
-constexpr uint16_t RESPONSE_TIMEOUT_MS = 200;
+void System_Check::checkBME(bool beginResult) {
+    if (!beginResult) _status |= SystemStatus::BME;
+}
 
-System_Check::System_Check(const Config& config)
-    :_config(config) {}
+void System_Check::checkWater(bool beginResult) {
+    if (!beginResult) _status |= SystemStatus::WATER;
+}
 
-uint8_t System_Check::run() {
-    uint8_t _status = OK;
+void System_Check::checkHall(bool beginResult) {
+    if (!beginResult) _status |= SystemStatus::HALL;
+}
 
-    // put the check componant logic here (with the functions outside it)
-    //_status |= checkServo();
-    //_status |= checkSD();
+void System_Check::checkServo(bool beginResult) {
+    if (!beginResult) _status |= SystemStatus::SERVO;
+}
 
-    return _status;
+void System_Check::checkSD(bool beginResult) {
+    if (!beginResult) _status |= SystemStatus::SD;
+}
+
+void System_Check::checkScreen(bool beginResult) {
+    if (!beginResult) _status |= SystemStatus::SCREEN;
 }
