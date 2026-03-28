@@ -33,7 +33,7 @@ class SD_Logger {
         void writeHeader();
 
         char _currentFile[13];
-        static constexpr size_t BUFFER_SIZE = 256;
+        static constexpr size_t BUFFER_SIZE = 128; // 256 at first but cost too mush ram so downgrad to 128
         char _buffer[BUFFER_SIZE];
         size_t _index = 0;
 

@@ -28,7 +28,7 @@ float Hall_Sensor::getRPM() {
     // Atomically grab and reset pulse count
     noInterrupts();
     uint32_t pulses = _pulseCount;
-    _pulseCount     = 0;
+    _pulseCount = 0;
     interrupts();
 
     _lastTime = now;

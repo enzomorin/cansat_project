@@ -6,7 +6,7 @@ struct WaterPressureData {
     float pressureKPa;  // KPa
     float depthM;       // meters of water depth
     int raw;            // raw for debug
-    bool  valid;
+    bool valid;
 };
 
 enum class WaterSensorMode : uint8_t {
