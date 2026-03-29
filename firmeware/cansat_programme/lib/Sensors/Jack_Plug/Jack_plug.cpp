@@ -11,7 +11,7 @@ void Jack_Plug::begin() {
     pinMode(_pin, INPUT_PULLUP);
 
     // Check state at boot — this is the initial block
-    _blocked = (digitalRead(_pin) == HIGH);
+    _blocked = (digitalRead(_pin) == LOW);
     _locked  = false;
 
     attachInterrupt(digitalPinToInterrupt(_pin), _isr, CHANGE);

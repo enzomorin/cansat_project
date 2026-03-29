@@ -41,6 +41,7 @@ void setup() {
     systemCheck.checkWater (water.begin());
 
     jack.begin();
+    jack.lockIn();
     hall.begin();
     button.begin();
     buzzer.begin();
@@ -72,12 +73,12 @@ void loop() {
             buzzer.jackBlocked();
         }
 
-        return;
+        // return;
     }
 
     button.read();
     // Detect if button pressed show on screen once
-    static bool telemetryWasActive = false;
+    static bool telemetryWasActive = true;
     if (button.telemetryActive() != telemetryWasActive) {
         telemetryWasActive = button.telemetryActive();
 
@@ -91,7 +92,6 @@ void loop() {
         }
     }
 
-    // telemetrie of so we return
     if (!button.telemetryActive()) {
         display.showText("Telemetry OFF");
         return;
@@ -121,14 +121,13 @@ void loop() {
 
         static char logStr[64];
         snprintf(logStr, sizeof(logStr),
-            "#%lu T:%.1f P:%.0f\nA:%.0f W:%.1f\nD:%.2f R:%d",
+            "#%lu T:%.1f P:%.0f\nA:%.0f W:%.1f\nD:%.2f RPM:%.0f",
             counter,
             bmeData.valid ? bmeData.temperature    : -999.0f,
             bmeData.valid ? bmeData.pressure        : -999.0f,
             bmeData.valid ? bmeData.altitude        : -999.0f,
             waterData.valid ? waterData.pressureKPa   : -999.0f,
             waterData.valid ? waterData.depthM        : -999.0f,
-            waterData.raw,
             rpmVal
         );
         display.showText(logStr);

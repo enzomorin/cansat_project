@@ -3,15 +3,23 @@
 #include <cstdint>
 
 namespace Pins {
+    // D4 = SDA (I2C) -> BME280
+    // D5 = SCL (I2C) -> BME280
+    // D6 = TX (Serial1) -> OpenLog RXI
+    // D7 = RX (Serial1) -> OpenLog TXO
+
+    constexpr uint8_t BUTTON = 1;
+    constexpr uint8_t JACK_PLUG = 2;
     constexpr uint8_t SERVO = 3;
-    constexpr uint8_t DISPLAY_RST = 1;
+    constexpr uint8_t HALL_SENSOR = 10; // need to review for the right pin (the little one i guess)
+    constexpr uint8_t BUZZER = 13; // LED
+
     constexpr uint8_t DISPLAY_ADDR = 0x3C;
     constexpr uint8_t BME_ADDR = 0x76;
+    constexpr uint8_t DISPLAY_RST = -1;
+
     constexpr uint8_t WATER_PRESSURE = A0;
-    constexpr uint8_t HALL_SENSOR = 0;
-    constexpr uint8_t JACK_PLUG = 8;
-    constexpr uint8_t BUTTON = 6;
-    constexpr uint8_t BUZZER = 9;
+    // handle spi radio code send the buffer into him and see if possible to get in a other file the mission logic (sd logging etc)
 }
 
 namespace Timings {
@@ -42,8 +50,4 @@ namespace OpenLogConfig {
     constexpr uint16_t CMD_DELAY_MS = 120;
     constexpr uint16_t BOOT_DELAY_MS = 300;
     constexpr uint16_t RESPONSE_TIMEOUT_MS = 200;
-}
-
-namespace SystemCheckConfig {
-    constexpr uint16_t SERVO_PULSE_US = 500;
 }
