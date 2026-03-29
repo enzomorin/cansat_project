@@ -3111,7 +3111,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_1.00mm:PinHeader_1x02_P1.00mm_Horizontal"
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Horizontal"
 			(at 127 144.78 0)
 			(effects
 				(font
@@ -3453,7 +3453,7 @@
 	)
 	(symbol
 		(lib_id "Device:Buzzer")
-		(at 144.78 163.83 0)
+		(at 91.44 27.94 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3462,7 +3462,7 @@
 		(fields_autoplaced yes)
 		(uuid "f1f399b5-ba01-42e4-b5c5-5ef44d0c188d")
 		(property "Reference" "BZ1"
-			(at 148.59 162.5599 0)
+			(at 95.25 26.6699 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3471,7 +3471,7 @@
 			)
 		)
 		(property "Value" "Buzzer_info"
-			(at 148.59 165.0999 0)
+			(at 95.25 29.2099 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3480,7 +3480,7 @@
 			)
 		)
 		(property "Footprint" "Buzzer_Beeper:Buzzer_12x9.5RM7.6"
-			(at 144.145 161.29 90)
+			(at 90.805 25.4 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3489,7 +3489,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 144.145 161.29 90)
+			(at 90.805 25.4 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3498,7 +3498,7 @@
 			)
 		)
 		(property "Description" "Buzzer, polarized"
-			(at 144.78 163.83 0)
+			(at 91.44 27.94 0)
 			(effects
 				(font
 					(size 1.27 1.27)
